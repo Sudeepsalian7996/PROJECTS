@@ -13,7 +13,7 @@ async function submitSignup(e){
         email:email.value,
         password:password.value
     }
-    const data=await axios.post("http://localhost:5200/signup",my_obj)
+    const data=await axios.post("http://localhost:5200/user/signup",my_obj)
     console.log(data)
     if(data.data.Error){
         //if same email is used show an error on the browser

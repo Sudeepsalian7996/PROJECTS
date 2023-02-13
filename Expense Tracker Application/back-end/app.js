@@ -9,7 +9,7 @@ const app=express()
 app.use(cors())
 app.use(bodyParser.json())
 
-app.use("/signup",signup)
+app.use("/user",signup)
 
 sequelize.sync()
 .then(()=>{
