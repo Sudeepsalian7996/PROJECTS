@@ -1,7 +1,7 @@
 const Sequelize=require("sequelize")
 const sequelize=require("../util/database")
 
-const signup=sequelize.define("signup",{
+const signup=sequelize.define("users",{
     id:{
         type:Sequelize.INTEGER,
         autoIncrement:true,
@@ -14,7 +14,8 @@ const signup=sequelize.define("signup",{
     },
     email:{
         allowNull:false,
-        type:Sequelize.STRING
+        type:Sequelize.STRING,
+        unique:true
     },
     password:{
         allowNull:false,
