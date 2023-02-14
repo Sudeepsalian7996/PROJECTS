@@ -1,7 +1,7 @@
 const signupdb=require("../models/signupdb")
 const encrypt=require("bcrypt")
 
-//sign up 
+//sign up page
 exports.signup=async(req,res)=>{
    try{
       const name=req.body.name
@@ -27,7 +27,7 @@ exports.signup=async(req,res)=>{
   
 }
 
-//Login
+//Login page
 exports.login=async(req,res)=>{
    try{
       const email=req.body.email
@@ -43,9 +43,11 @@ exports.login=async(req,res)=>{
             if(err){
                throw new Error("Something went wrong in decypting password")
             }
-            console.log(result)
+            
             if(result===true){
+               // res.redirect("/expense/get-product")
                res.json({success:"login Successfully Done"})
+               
             } else{
                res.json({message:"Password is incorrect.."})
             }
