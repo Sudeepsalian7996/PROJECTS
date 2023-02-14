@@ -19,7 +19,8 @@ const signup=sequelize.define("users",{
     },
     password:{
         allowNull:false,
-        type:Sequelize.STRING
+        type:Sequelize.STRING,
+        unique:true
     }
 })
 
