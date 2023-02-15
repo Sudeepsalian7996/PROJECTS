@@ -14,6 +14,7 @@ async function loginPage(e){
                 password:password.value
             }
             const data=await axios.post("http://localhost:5200/user/login",login_obj)
+            console.log(data)
             //If email or password are wrong
             if(data.data.message){
                 const errorText=document.createTextNode(data.data.message)
@@ -32,6 +33,9 @@ async function loginPage(e){
         setTimeout(()=>{
             loginSuccess.removeChild(successText)
         },3000)
+        localStorage.setItem("token",data.data.token)
+        //connecting login page to expense app
+        window.location.href="./expense.html"
     }
 }catch{
         console.log("error in login page FE")

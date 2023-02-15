@@ -7,7 +7,8 @@ const allExpenses=document.getElementById("allExpenses")
 //Fetching the expense from database
 window.addEventListener("DOMContentLoaded",async()=>{
    try{
-        const data=await axios.get("http://localhost:5200/expense/get-expense")
+        const tokenId=localStorage.getItem("token")
+        const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":tokenId}})
         console.log(data)
         const allExpense=data.data.allExpenses
         for(let i=0;i<allExpense.length;i++){

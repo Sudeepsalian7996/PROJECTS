@@ -1,5 +1,6 @@
 const signupdb=require("../models/signupdb")
 const encrypt=require("bcrypt")
+const jwt=require("jsonwebtoken")
 
 //sign up page
 exports.signup=async(req,res)=>{
@@ -27,6 +28,11 @@ exports.signup=async(req,res)=>{
   
 }
 
+//creating tokens
+function createToken(id){
+   return jwt.sign({userId:id},"32204kahfkbkkcy9429hshksky2939hcsd")
+}
+
 //Login page
 exports.login=async(req,res)=>{
    try{
@@ -45,8 +51,7 @@ exports.login=async(req,res)=>{
             }
             
             if(result===true){
-               // res.redirect("/expense/get-product")
-               res.json({success:"login Successfully Done"})
+               res.json({success:"login Successfully Done",token:createToken(emaildb[0].id)})
                
             } else{
                res.json({message:"Password is incorrect.."})
