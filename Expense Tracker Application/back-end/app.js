@@ -4,10 +4,12 @@ const cors=require("cors")
 
 const signup=require("./routes/user")
 const expenseDetail=require("./routes/expense")
+const purchase=require("./routes/purchase")
 const sequelize=require("./util/database")
 
 const User=require("./models/signupdb")
 const Expense=require("./models/expensedb")
+const Order=require("./models/orderdb")
 
 const app=express()
 app.use(cors())
@@ -17,9 +19,14 @@ app.use("/user",signup)
 
 app.use("/expense",expenseDetail)
 
+app.use("/purchase",purchase)
+
 //create relations
 User.hasMany(Expense)
 Expense.belongsTo(User)
+
+User.hasMany(Order)
+Order.belongsTo(User)
 
 sequelize.sync()
 .then(()=>{

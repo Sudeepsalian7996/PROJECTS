@@ -63,3 +63,40 @@ async function postExpense(e){
     }
    
 }
+
+//Buy premium button
+document.getElementById("razorpay").onclick=async(e)=>{
+    const token=localStorage.getItem("token")
+    const resource=await axios.get("http://localhost:5200/purchase/premium-membership",{headers:{"Authorization":token}})
+    
+    let option={
+    "key":resource.data.key_id,
+    "order_id":resource.data.order.id,
+    "handler":async function (res){
+         const data=await axios.post("http://localhost:5200/purchase/updatePremium",{
+            "order_id":option.order_id,
+            "payment_id":res.razorpay_payment_id
+        },{headers:{"Authorization":token} })
+        if(data.data.success){
+            document.getElementById("razorpay").remove()
+            const addTexts=document.getElementById("addText")
+            const text=document.createTextNode("successfully purchased premium")
+            addTexts.appendChild(text)
+        }
+        alert("payment successfully done")
+    },
+   }
+const raz1=new Razorpay(option)
+raz1.open()
+e.preventDefault()
+ raz1.on("payment.failed",async function(){  
+    const key=resource.data.order.id
+    
+    const response=await axios.post("http://localhost:5200/purchase/updatePremium",{
+        "order_id":key,
+        "payment_id":null
+    },{headers:{"Authorization":token} })
+    
+    alert(response.data.message)
+})
+}

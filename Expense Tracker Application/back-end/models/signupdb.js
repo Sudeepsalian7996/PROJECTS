@@ -21,7 +21,8 @@ const signup=sequelize.define("users",{
         allowNull:false,
         type:Sequelize.STRING,
         unique:true
-    }
+    },
+    premium:Sequelize.BOOLEAN
 })
 
 module.exports=signup
