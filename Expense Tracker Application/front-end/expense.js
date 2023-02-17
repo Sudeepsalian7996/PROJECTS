@@ -25,6 +25,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
         if(decodeToken.isPremium){
             document.getElementById("razorpay").style.visibility="hidden"
             document.getElementById("addText").innerHTML="Premium purchased"
+            showLeaderBoard()
         }
         const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":tokenId}})
         const allExpense=data.data.allExpenses
@@ -86,34 +87,71 @@ async function postExpense(e){
 
 //Buy premium button
 document.getElementById("razorpay").onclick=async(e)=>{
-    const token=localStorage.getItem("token")
-    const resource=await axios.get("http://localhost:5200/purchase/premium-membership",{headers:{"Authorization":token}})
-    
-    let option={
-    "key":resource.data.key_id,
-    "order_id":resource.data.order.id,
-    "handler":async function (res){
-         const data=await axios.post("http://localhost:5200/purchase/updatePremium",{
-            "order_id":option.order_id,
-            "payment_id":res.razorpay_payment_id
-        },{headers:{"Authorization":token} })
-        alert("payment successfully done")
-        document.getElementById("razorpay").style.visibility="hidden"
-            document.getElementById("addText").innerHTML="Premium purchased"
-            localStorage.setItem("token",data.data.token)
-    },
+    try{
+        const token=localStorage.getItem("token")
+        const resource=await axios.get("http://localhost:5200/purchase/premium-membership",{headers:{"Authorization":token}})
+        
+        let option={
+        "key":resource.data.key_id,
+        "order_id":resource.data.order.id,
+        "handler":async function (res){
+            const data=await axios.post("http://localhost:5200/purchase/updatePremium",{
+                "order_id":option.order_id,
+                "payment_id":res.razorpay_payment_id
+            },{headers:{"Authorization":token} })
+            alert("payment successfully done")
+            document.getElementById("razorpay").style.visibility="hidden"
+                document.getElementById("addText").innerHTML="Premium purchased"
+                localStorage.setItem("token",data.data.token)         
+         },
+        
    }
 const raz1=new Razorpay(option)
 raz1.open()
 e.preventDefault()
  raz1.on("payment.failed",async function(){  
-    const key=resource.data.order.id
+    try{
+        const key=resource.data.order.id
     
-    const response=await axios.post("http://localhost:5200/purchase/updatePremium",{
-        "order_id":key,
-        "payment_id":null
-    },{headers:{"Authorization":token} })
-    
-    alert(response.data.message)
+        const response=await axios.post("http://localhost:5200/purchase/updatePremium",{
+            "order_id":key,
+            "payment_id":null
+        },{headers:{"Authorization":token} })
+        
+        alert(response.data.message)
+    }catch(err){
+        console.log("error in payment failed section",err)
+    }
+   
 })
+ }catch(err){
+    console.log("error in razorpay frontEnd-->",err)
+ }
+}
+
+//leaderBoard feature-->premium membership
+async function showLeaderBoard(){
+    try{
+        const buttonLeaderBoard=document.createElement("input")
+        buttonLeaderBoard.type="button"
+        buttonLeaderBoard.value="Show LeaderBoard"
+       document.getElementById("addText").appendChild(buttonLeaderBoard)
+        console.log(buttonLeaderBoard)
+        buttonLeaderBoard.onclick=async function(e){
+            e.preventDefault()
+            const token=localStorage.getItem("token")
+           const response= await axios.get("http://localhost:5200/premium/leaderBoard",{headers:{"Authorization":token}})
+            console.log(response.data[1])
+            const parent=document.getElementById("leaderboard")
+            response.data.forEach(ele => {
+                if(ele.total_amount===null){
+                    ele.total_amount=0
+                }
+              const child=  `<li>Name-->${ele.name}&nbsp;---Total Amount-->${ele.total_amount}</li>`
+              parent.innerHTML=parent.innerHTML+child
+            });
+        }
+    }catch(err){
+        console.log("err in showLeaderBoard")
+    }
 }

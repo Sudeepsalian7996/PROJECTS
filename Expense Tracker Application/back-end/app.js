@@ -5,6 +5,7 @@ const cors=require("cors")
 const signup=require("./routes/user")
 const expenseDetail=require("./routes/expense")
 const purchase=require("./routes/purchase")
+const premium=require("./routes/premium")
 const sequelize=require("./util/database")
 
 const User=require("./models/signupdb")
@@ -20,6 +21,8 @@ app.use("/user",signup)
 app.use("/expense",expenseDetail)
 
 app.use("/purchase",purchase)
+
+app.use("/premium",premium)
 
 //create relations
 User.hasMany(Expense)
