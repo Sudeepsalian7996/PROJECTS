@@ -29,8 +29,8 @@ exports.signup=async(req,res)=>{
 }
 
 //creating tokens
-function createToken(id){
-   return jwt.sign({userId:id},"32204kahfkbkkcy9429hshksky2939hcsd")
+function createToken(id,premium){
+   return jwt.sign({userId:id,isPremium:premium},"32204kahfkbkkcy9429hshksky2939hcsd")
 }
 
 //Login page
@@ -51,7 +51,7 @@ exports.login=async(req,res)=>{
             }
             
             if(result===true){
-               res.json({success:"login Successfully Done",token:createToken(emaildb[0].id)})
+               res.json({success:"login Successfully Done",token:createToken(emaildb[0].id,emaildb[0].premium)})
                
             } else{
                res.json({message:"Password is incorrect.."})

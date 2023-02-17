@@ -1,15 +1,32 @@
+
 const amount=document.getElementById("amount")
 const description=document.getElementById("description")
 const category=document.getElementById("category")
 const addExpense=document.getElementById("expense")
 const allExpenses=document.getElementById("allExpenses")
 
+//used do decode jwt
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
 //Fetching the expense from database
 window.addEventListener("DOMContentLoaded",async()=>{
    try{
         const tokenId=localStorage.getItem("token")
+        const decodeToken=parseJwt(tokenId)
+        console.log(decodeToken)
+        if(decodeToken.isPremium){
+            document.getElementById("razorpay").style.visibility="hidden"
+            document.getElementById("addText").innerHTML="Premium purchased"
+        }
         const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":tokenId}})
-        console.log(data)
         const allExpense=data.data.allExpenses
         for(let i=0;i<allExpense.length;i++){
             showOnScreen(allExpense[i])
@@ -23,12 +40,15 @@ window.addEventListener("DOMContentLoaded",async()=>{
 //showing the data on the screen
 function showOnScreen(show){
     try{
+
+
         const newExpense=`<li id=${show.id}>${show.amount}&nbsp;&nbsp;${show.description}&nbsp;&nbsp;
         ${show.category}&nbsp;&nbsp;
         <button onclick="deleteExpense(${show.id})">deleteExpense</button></li>`
         allExpenses.innerHTML=allExpenses.innerHTML+newExpense
+        
     }catch(err){
-        console.log("error in showscreen",err)
+     console.log("error in showscreen",err)
     }
   
 }
@@ -77,13 +97,10 @@ document.getElementById("razorpay").onclick=async(e)=>{
             "order_id":option.order_id,
             "payment_id":res.razorpay_payment_id
         },{headers:{"Authorization":token} })
-        if(data.data.success){
-            document.getElementById("razorpay").remove()
-            const addTexts=document.getElementById("addText")
-            const text=document.createTextNode("successfully purchased premium")
-            addTexts.appendChild(text)
-        }
         alert("payment successfully done")
+        document.getElementById("razorpay").style.visibility="hidden"
+            document.getElementById("addText").innerHTML="Premium purchased"
+            localStorage.setItem("token",data.data.token)
     },
    }
 const raz1=new Razorpay(option)

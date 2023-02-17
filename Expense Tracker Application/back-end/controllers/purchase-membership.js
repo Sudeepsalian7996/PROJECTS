@@ -1,11 +1,12 @@
 const Razorpay=require("razorpay")
 const orderDb=require("../models/orderdb")
+const jwt=require("jsonwebtoken")
 
 exports.getPremium=async (req,res,next)=>{
     try{
         const Razor=new Razorpay({
-            key_id:"rzp_test_gECQk6X0m86Aj0",
-            key_secret:"3nDmL88xzh6JzF3sFIhGT9Fm"
+            key_id:"rzp_test_0gsCcphg6RuSjV",
+            key_secret:"RFUOx0J88N7qQ76vvuShva8O"
         })
         const amount=2000
         Razor.orders.create({amount,currency:"INR"},async(err,order)=>{
@@ -25,6 +26,9 @@ exports.getPremium=async (req,res,next)=>{
         res.json({Error:err})
     }
 }
+function createToken(id,premium){
+    return jwt.sign({userId:id,isPremium:premium},"32204kahfkbkkcy9429hshksky2939hcsd")
+ }
 
 exports.updatePremium=async(req,res,next)=>{
     try{
@@ -48,7 +52,7 @@ exports.updatePremium=async(req,res,next)=>{
             })
         }
         Promise.all([updateTable(result),updateUserTable()]).then(()=>{
-            res.json({success:true,message:"transaction successfull"})
+            res.json({success:true,message:"Premium purchased successfully",token:createToken(req.user.id,true)})
         })
     }catch(err){
         console.log("error in update transaction",err)
