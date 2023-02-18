@@ -60,14 +60,14 @@ async function deleteExpense(key){
         const oneExpense=document.getElementById(key)
         allExpenses.removeChild(oneExpense)
         await axios.delete(`http://localhost:5200/expense/delete-expense/${key}`)
-       
+      
     }catch(err){
         console.log("delete expeses error-->",err)
     }
     
 }
 
-//Addin a expense to the database
+//Adding a expense to the database
 addExpense.addEventListener("click",postExpense)
 async function postExpense(e){
     try{
@@ -135,18 +135,21 @@ async function showLeaderBoard(){
         const buttonLeaderBoard=document.createElement("input")
         buttonLeaderBoard.type="button"
         buttonLeaderBoard.value="Show LeaderBoard"
+        
        document.getElementById("addText").appendChild(buttonLeaderBoard)
-        console.log(buttonLeaderBoard)
+       
         buttonLeaderBoard.onclick=async function(e){
             e.preventDefault()
+            document.getElementById("leaderboard").innerHTML=""
             const token=localStorage.getItem("token")
            const response= await axios.get("http://localhost:5200/premium/leaderBoard",{headers:{"Authorization":token}})
-            const parent=document.getElementById("leaderboard")
+            let parent=document.getElementById("leaderboard")
+           
             response.data.forEach(ele => {
                 if(ele.total_amount===null){
                     ele.total_amount=0
                 }
-              const child=  `<li>Name-->${ele.name}&nbsp;---Total Amount-->${ele.total_amount}</li>`
+              const child=  `<li>Name-->${ele.name}&nbsp;---Total Amount-->${ele.totalAmount}</li>`
               parent.innerHTML=parent.innerHTML+child
             });
         }

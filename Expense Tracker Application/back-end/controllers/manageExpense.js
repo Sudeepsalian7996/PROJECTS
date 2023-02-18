@@ -15,21 +15,13 @@ exports.addExpense=async(req,res)=>{
             category:category,
             userId:expenseId
         })
-    //     console.log(totalamtdb.totalAmount)
-    //    const total=Number(totalamtdb.totalAmount)+Number(amount)
-       
-    //    console.log(total)
-    //   await userdb.update({
-    //     totalAmount:total
-    //    },{
-    //     where:{id:totalamtdb.id
-    //     }
-    //    })
-    //    await t.commit()
+     
+       const user=await userdb.findByPk(totalamtdb.id)
+        user.totalAmount=Number(user.totalAmount)+Number(amount)
+         user.save()
         res.json({newExpense:data})
     }
     catch(err){
-        // await t.rollback()
         console.log("addExpense error-->",err)
         res.json({Error:err})
     }
@@ -52,7 +44,15 @@ exports.getExpense=async(req,res)=>{
 exports.deleteExpense=async(req,res)=>{
     try{
         const deleteExpenseId=req.params.id
-       const data=await expensedatabase.destroy({where:{id:deleteExpenseId}})
+        const data= await expensedatabase.findByPk(deleteExpenseId)
+        const amt= data.dataValues.amount
+        const user=await userdb.findByPk(totalamtdb.id)
+        user.totalAmount=Number(user.totalAmount)-Number(amt)
+        user.save()
+       
+       await expensedatabase.destroy({where:{id:deleteExpenseId}})
+
+
     }catch(err){
         console.log("error in delete expense database")
         res.json({Error:err})

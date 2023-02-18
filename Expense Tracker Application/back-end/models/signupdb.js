@@ -25,7 +25,7 @@ const signup=sequelize.define("users",{
     premium:Sequelize.BOOLEAN,
     totalAmount:{
          type:Sequelize.BIGINT,
-         defaultValue:'0'
+         defaultValue:0
     }
 })
 
