@@ -141,7 +141,6 @@ async function showLeaderBoard(){
             e.preventDefault()
             const token=localStorage.getItem("token")
            const response= await axios.get("http://localhost:5200/premium/leaderBoard",{headers:{"Authorization":token}})
-            console.log(response.data[1])
             const parent=document.getElementById("leaderboard")
             response.data.forEach(ele => {
                 if(ele.total_amount===null){

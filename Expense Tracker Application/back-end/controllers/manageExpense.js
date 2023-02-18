@@ -1,5 +1,8 @@
+const sequelize=require("../util/database")
 const expensedatabase=require("../models/expensedb")
+const userdb=require("../models/signupdb")
 
+var totalamtdb;
 //Adding the expense to the database
 exports.addExpense=async(req,res)=>{
     try{
@@ -12,9 +15,21 @@ exports.addExpense=async(req,res)=>{
             category:category,
             userId:expenseId
         })
+    //     console.log(totalamtdb.totalAmount)
+    //    const total=Number(totalamtdb.totalAmount)+Number(amount)
+       
+    //    console.log(total)
+    //   await userdb.update({
+    //     totalAmount:total
+    //    },{
+    //     where:{id:totalamtdb.id
+    //     }
+    //    })
+    //    await t.commit()
         res.json({newExpense:data})
     }
     catch(err){
+        // await t.rollback()
         console.log("addExpense error-->",err)
         res.json({Error:err})
     }
@@ -22,6 +37,7 @@ exports.addExpense=async(req,res)=>{
 let expenseId;
 //Fetching all the expenses from the database
 exports.getExpense=async(req,res)=>{
+    totalamtdb=req.user
     expenseId=req.user.id
     try{
         const data=await expensedatabase.findAll({where:{userId:expenseId}})

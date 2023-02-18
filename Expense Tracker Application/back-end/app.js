@@ -6,6 +6,7 @@ const signup=require("./routes/user")
 const expenseDetail=require("./routes/expense")
 const purchase=require("./routes/purchase")
 const premium=require("./routes/premium")
+const password=require("./routes/forgotPassword")
 const sequelize=require("./util/database")
 
 const User=require("./models/signupdb")
@@ -24,6 +25,8 @@ app.use("/purchase",purchase)
 
 app.use("/premium",premium)
 
+app.use("/password",password)
+
 //create relations
 User.hasMany(Expense)
 Expense.belongsTo(User)
@@ -31,7 +34,7 @@ Expense.belongsTo(User)
 User.hasMany(Order)
 Order.belongsTo(User)
 
-sequelize.sync()
+sequelize.sync({alter:true})
 .then(()=>{
     app.listen(5200)
 })
