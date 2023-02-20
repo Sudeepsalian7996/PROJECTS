@@ -10,7 +10,7 @@ exports.userAuthontication=async (req,res,next)=>{
     req.user=data
     next()
   }catch(err){
-    console.log("error in auth")
+    console.log("error in auth",err)
     res.json({Error:err})
   }
   
