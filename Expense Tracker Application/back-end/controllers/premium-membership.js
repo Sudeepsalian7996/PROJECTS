@@ -14,8 +14,6 @@ exports.premiumFeature=async(req,res,next)=>{
             //     }
             // ],
             attributes:["name","totalAmount"],
-            
-         
             order:[["totalAmount","DESC"]]
         })
         res.json(leaderBoardofUser)

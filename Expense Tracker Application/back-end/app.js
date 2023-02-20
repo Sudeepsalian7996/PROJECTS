@@ -25,7 +25,7 @@ app.use("/purchase",purchase)
 
 app.use("/premium",premium)
 
-// app.use("/password",password)
+app.use("/password",password)
 
 //create relations
 User.hasMany(Expense)

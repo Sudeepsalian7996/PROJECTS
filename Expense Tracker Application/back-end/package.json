@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.0.3",
     "nodemon": "^2.0.20",
     "script": "^0.1.4"
   },
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.1.2",
     "razorpay": "^2.8.4",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "sib-api-v3-sdk": "^8.5.0"
   }
 }
