@@ -93,12 +93,11 @@ exports.updatepassword=async (req,res)=>{
         const findUser=  await forgotpassword.findOne({where:{id:resetpassword}})
         const data=await user.findOne({where:{id:findUser.userId}})
        if(data){
-        const hash=encrypt.hash(newpassword,10,async(err,hash)=>{
+        encrypt.hash(newpassword,10,async(err,hash)=>{
             if(err){
                 res.json({Error:err})
             }     
-            const data2=await data.update({password:hash})
-            console.log(data2)    
+            const data2=await data.update({password:hash}) 
              res.json({data:data2})
         })
     }

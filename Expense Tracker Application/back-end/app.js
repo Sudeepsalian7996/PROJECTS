@@ -13,6 +13,7 @@ const User=require("./models/signupdb")
 const Expense=require("./models/expensedb")
 const Order=require("./models/orderdb")
 const ForgotPassword=require("./models/forgotPassworddb")
+const Download=require("./models/downloaddb")
 
 const app=express()
 app.use(cors())
@@ -37,6 +38,9 @@ Order.belongsTo(User)
 
 User.hasMany(ForgotPassword)
 ForgotPassword.belongsTo(User)
+
+User.hasMany(Download)
+Download.belongsTo(User)
 
 sequelize.sync()
 .then(()=>{
