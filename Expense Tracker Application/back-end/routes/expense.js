@@ -13,4 +13,6 @@ routes.delete("/delete-expense/:id",manageExpense.deleteExpense)
 
 routes.get("/download",userAuth.userAuthontication,manageExpense.download)
 
+routes.get("/pagination",userAuth.userAuthontication,manageExpense.paginateExpenses)
+
 module.exports=routes

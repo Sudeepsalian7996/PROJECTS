@@ -118,3 +118,19 @@ async function uploadtoS3(data,filename){
     }
   
 }
+
+//paginate expenses
+exports.paginateExpenses=async(req,res)=>{
+    try{
+        const page=req.query.page
+      const data=  await expensedatabase.findAll({
+        offset:(page)*10,
+        limit:10,
+        where: { userId:req.user.id }
+    })
+      res.json({Data:data})
+    }catch(err){
+        console.log("pagination error-->",err)
+        res.json({Error:err})
+    }
+}
