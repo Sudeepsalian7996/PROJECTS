@@ -21,7 +21,7 @@ exports.addExpense=async(req,res)=>{
        const user=await userdb.findByPk(totalamtdb.id)
         user.totalAmount=Number(user.totalAmount)+Number(amount)
          user.save()
-        res.json({newExpense:data})
+        res.json({newExpense:data,message:"expense added successfully"})
     }
     catch(err){
         console.log("addExpense error-->",err)
@@ -123,9 +123,11 @@ async function uploadtoS3(data,filename){
 exports.paginateExpenses=async(req,res)=>{
     try{
         const page=req.query.page
+        const pagesize=req.query.pagesize
+        const limits=+pagesize
       const data=  await expensedatabase.findAll({
-        offset:(page)*10,
-        limit:10,
+        offset:(page-1)*pagesize,
+        limit:limits,
         where: { userId:req.user.id }
     })
       res.json({Data:data})
