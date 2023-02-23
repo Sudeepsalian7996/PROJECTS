@@ -11,14 +11,25 @@ exports.signup=async(req,res)=>{
       if(email==="" || password==="" || name===""){
          return res.json({success:false,message:"Fill all the fields"})
       }
+      if(password.length<8){
+        return res.json({success:false,message:"password must contains atleast 8 characters"})
+      }
       encrypt.hash(password,10,async(err,hash)=>{
-         console.log("encryption error-->",err)
+         if(err){
+            console.log("encryption error-->",err)
+            
+         }
+         const emailUnique=await signupdb.findAll({where:{email:email}})
+
+         if(emailUnique.length!==0){
+            return res.json({success:false,message:"user already exist,change the Email"})
+         }
          const data=await signupdb.create({
             name:name,
             email:email,
             password:hash
            }) 
-           res.json({success:true,message:"SignUp successfull"})
+           res.json({success:true,message:"SignUp successfull,Login to enter a page"})
       })
    
    }catch(err){
