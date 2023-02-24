@@ -22,7 +22,7 @@ exports.forgotpassword=async(req,res)=>{
             
                 const apiKey=client.authentications['api-key']
                 apiKey.apiKey=process.env.API_KEY
-            
+                
                 const transEmailApi=new sib.TransactionalEmailsApi()
             
                 const sender={
@@ -71,11 +71,49 @@ exports.resetpassword=async (req,res)=>{
                                                  console.log('called')
                                              }
                                          </script>
+                                         <style>
+                                         body{
+                                            justify-content: center;
+                                            text-align: center;   
+                                        }
+                                        input{
+                                            border-radius: 15px;
+                                            padding: 25px;
+                                            margin-bottom: 10px;
+                                            width:60%
+                                        }
+                                        button{
+                                            color: white;
+                                            background-color: rgb(73, 188, 73);
+                                            padding: 10px 28px;
+                                            text-align: center;
+                                            font-family: inherit;
+                                            font-weight: bold;
+                                            font-size: large;
+                                            border-radius: 20px;   
+                                        }
+                                        header{
+                                            background-color: rgb(20, 117, 156);
+                                            color: white;
+                                            padding-top:86px ;
+                                            margin-bottom:15px;
+                                            height: 300px
+                                        }
+                                        label{
+                                            font-family: inherit;
+                                            font-size: 30px;
+                                         }
+                                         </style>
+                                         <body>
+                                            <header>
+                                                <h1>Enter your New Password<h1>
+                                            </header>
                                          <form action="/password/updatepassword/${id}" method="get">
                                              <label for="newpassword">Enter New password</label>
-                                             <input name="newpassword" type="password" required></input>
+                                             <input name="newpassword" type="password" required></input><br><br>
                                              <button>reset password</button>
                                          </form>
+                                         </body>
                                      </html>`
                                      )
                         res.end()
