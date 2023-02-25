@@ -23,7 +23,7 @@ async function submitSignup(e){
             console.log(SignUperror)
         setTimeout(()=>{
             SignUperror.removeChild(signUpText)
-        },3000)
+        },4000)
     }
     if(data.data.success===true){
         const signUpText=document.createTextNode(data.data.message)
@@ -32,7 +32,10 @@ async function submitSignup(e){
         console.log(SignUperror)
     setTimeout(()=>{
         SignUperror.removeChild(signUpText)
-    },3000)
+    },4000)
     }
+    userName.value=""
+    email.value=""
+    password.value=""
 }
 

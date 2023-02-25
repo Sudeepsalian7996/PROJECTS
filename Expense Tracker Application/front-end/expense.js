@@ -19,34 +19,87 @@ function parseJwt (token) {
 //Fetching the expense from database
 window.addEventListener("DOMContentLoaded",async()=>{
    try{
+    
         const tokenId=localStorage.getItem("token")
         const decodeToken=parseJwt(tokenId)
-        console.log(decodeToken)
         if(decodeToken.isPremium){
             document.getElementById("razorpay").style.visibility="hidden"
-            document.getElementById("addText").innerHTML="Premium purchased"
+            // document.getElementById("addText").innerHTML="Premium purchased"
             showLeaderBoard()
+            downloadReport()
         }
-        const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":tokenId}})
-        const allExpense=data.data.allExpenses
-        for(let i=0;i<allExpense.length;i++){
-            showOnScreen(allExpense[i])
-        }
+        
+        pagination()
         
    }catch(err){
     console.log("windowOnload error",err)
    }
 })
- 
+
+ //creating a pagination system
+async function pagination(){
+    try{
+        const token=localStorage.getItem("token")
+        const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":token}})
+    
+        const pagination=document.getElementById("pagination")
+        
+       const totalPagesize=localStorage.getItem("pageSize")
+       const totalpage=Math.ceil((data.data.allExpenses.length)/totalPagesize)
+
+       if(!totalPagesize){
+        localStorage.setItem("pageSize",5)
+       }
+       const response=await axios.get(`http://localhost:5200/expense/pagination?page=${1}&pagesize=${5}`,{headers:{"Authorization":token}})
+                    let allExpense=response.data.Data
+                    
+                    for(let i=0;i<allExpense.length;i++){
+                        
+                        showOnScreen(response.data.Data[i])    
+                        }
+      for(let i=0;i<totalpage;i++){
+            let page=i+1
+            button=document.createElement("button")
+            button.innerHTML=i+1
+            
+                button.onclick=async()=>{
+                    allExpenses.innerHTML=""
+                    const response=await axios.get(`http://localhost:5200/expense/pagination?page=${page}&pagesize=${totalPagesize}`,{headers:{"Authorization":token}})
+                    let allExpense=response.data.Data
+                    for(let i=0;i<allExpense.length;i++){
+                        showOnScreen(response.data.Data[i])    
+                        }
+                } 
+        pagination.appendChild(button)
+        }  
+    }catch(err){
+        console.log("pagination error",err)
+    }
+   
+}
+
 //showing the data on the screen
 function showOnScreen(show){
     try{
-
-
-        const newExpense=`<li id=${show.id}>${show.amount}&nbsp;&nbsp;${show.description}&nbsp;&nbsp;
-        ${show.category}&nbsp;&nbsp;
-        <button onclick="deleteExpense(${show.id})">deleteExpense</button></li>`
+        const pagesize=document.getElementById("pagesize")
+        pagesize.addEventListener("click",()=>{
+            localStorage.setItem("pageSize",pagesize.value)
+            window.location.reload()
+           })
+    //    const newExpense = `<li id=${show.id}>&nbsp;&nbsp;${show.amount}&nbsp&nbsp;&nbsp;;&nbsp;${show.description}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    //     ${show.category}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    //     <button onclick="deleteExpense(${show.id})">delete</button></li>`
+        const newExpense=`<table id=${show.id} class="table text-white ">
+        <tr>
+        <td><li></li></td>
+        <td>${show.amount}</td>
+        <td>${show.description}</td>
+        <td>${show.category}</td>
+        <td><button onclick="deleteExpense(${show.id})" style="float:right" class="btn btn-danger" >delete</button></td>
+        </tr>
+        </table>`
         allExpenses.innerHTML=allExpenses.innerHTML+newExpense
+      
         
     }catch(err){
      console.log("error in showscreen",err)
@@ -78,7 +131,14 @@ async function postExpense(e){
             category:category.value
         }
         const data=await axios.post("http://localhost:5200/expense/add-expense",expense_obj)
-            showOnScreen(data.data.newExpense)   
+        showOnScreen(data.data.newExpense)
+        const expensetext=document.getElementById("expensetext")  
+        const success=document.createTextNode("Expense added successfully")
+        expensetext.appendChild(success)   
+        setTimeout(()=>{
+           expensetext.removeChild(success)
+           },2000)
+        window.location.reload()
     }catch(err){
         console.log("addExpense Error->",err)
     }
@@ -101,7 +161,6 @@ document.getElementById("razorpay").onclick=async(e)=>{
             },{headers:{"Authorization":token} })
             alert("payment successfully done")
             document.getElementById("razorpay").style.visibility="hidden"
-                document.getElementById("addText").innerHTML="Premium purchased"
                 localStorage.setItem("token",data.data.token)         
          },
         
@@ -132,28 +191,58 @@ e.preventDefault()
 //leaderBoard feature-->premium membership
 async function showLeaderBoard(){
     try{
-        const buttonLeaderBoard=document.createElement("input")
-        buttonLeaderBoard.type="button"
-        buttonLeaderBoard.value="Show LeaderBoard"
+    //     const buttonLeaderBoard=document.createElement("input")
+    //     buttonLeaderBoard.type="button"
+    //     buttonLeaderBoard.value="Show LeaderBoard"
         
-       document.getElementById("addText").appendChild(buttonLeaderBoard)
+    //    document.getElementById("addText").appendChild(buttonLeaderBoard)
        
-        buttonLeaderBoard.onclick=async function(e){
-            e.preventDefault()
+        // buttonLeaderBoard.onclick=
+        // async (e)=>{
+            // e.preventDefault()
+       document.getElementById("addText").innerHTML="LeaderBoard"
+
             document.getElementById("leaderboard").innerHTML=""
             const token=localStorage.getItem("token")
            const response= await axios.get("http://localhost:5200/premium/leaderBoard",{headers:{"Authorization":token}})
             let parent=document.getElementById("leaderboard")
-           
+         
             response.data.forEach(ele => {
                 if(ele.total_amount===null){
                     ele.total_amount=0
                 }
-              const child=  `<li>Name-->${ele.name}&nbsp;---Total Amount-->${ele.totalAmount}</li>`
+            const child=   `<li class="">${ele.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${ele.totalAmount}</li>`       
               parent.innerHTML=parent.innerHTML+child
+              
             });
-        }
+        // }
     }catch(err){
         console.log("err in showLeaderBoard")
     }
 }
+
+//premium feature download option
+function downloadReport(){
+    try{
+        const token=localStorage.getItem("token")
+        buttonDownload=document.createElement("input")
+        buttonDownload.type="button"
+        buttonDownload.value="Download"
+        buttonDownload.setAttribute("class","btn btn-warning border-3 text-white")
+       const reportText= document.createTextNode("Download Report")
+       document.getElementById("reportText").appendChild(reportText)
+        document.getElementById("buttons").appendChild(buttonDownload)
+        buttonDownload.addEventListener("click",async(e)=>{
+            e.preventDefault()
+            const response= await axios.get("http://localhost:5200/expense/download",{headers:{"Authorization":token}})
+           
+            const a=document.createElement("a")
+            a.href=response.data.url
+            a.click()
+
+        })
+    }catch(err){
+        console.log("error in download report-->",err)
+    }
+}
+

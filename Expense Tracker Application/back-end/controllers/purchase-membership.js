@@ -5,8 +5,8 @@ const jwt=require("jsonwebtoken")
 exports.getPremium=async (req,res,next)=>{
     try{
         const Razor=new Razorpay({
-            key_id:"rzp_test_dzsmTNvLlGeTlR",
-            key_secret:"iPZxRqk9rEbm1VF1HZZ34O9l"
+            key_id:process.env.KEY_ID,
+            key_secret:process.env.KEY_SECRET
         })
         const amount=2000
         Razor.orders.create({amount,currency:"INR"},async(err,order)=>{

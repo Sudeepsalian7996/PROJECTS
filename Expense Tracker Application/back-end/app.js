@@ -1,6 +1,12 @@
 const express=require("express")
+const fs=require("fs")
+const path=require("path")
 const bodyParser=require("body-parser")
 const cors=require("cors")
+const helmet=require("helmet")
+const compress=require("compression")
+const morgan=require("morgan")
+require("dotenv").config()
 
 const signup=require("./routes/user")
 const expenseDetail=require("./routes/expense")
@@ -14,9 +20,17 @@ const Expense=require("./models/expensedb")
 const Order=require("./models/orderdb")
 const ForgotPassword=require("./models/forgotPassworddb")
 const Download=require("./models/downloaddb")
+const { Stream } = require("stream")
 
 const app=express()
 app.use(cors())
+app.use(helmet())
+app.use(compress())
+
+const infoInFile=fs.createWriteStream(path.join(__dirname,"request.log"),{flags:"a"})
+
+app.use(morgan("combined",{stream:infoInFile}))
+
 app.use(bodyParser.json())
 
 app.use("/user",signup)
