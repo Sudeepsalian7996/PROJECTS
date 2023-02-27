@@ -9,7 +9,7 @@ async function forgotPassword(e){
             email:email.value
         }
         e.preventDefault()
-        const data=await axios.post("http://localhost:5200/password/forgotpassword",obj)
+        const data=await axios.post("http://100.26.11.136:5200/password/forgotpassword",obj)
         console.log(data)
         email.value=""
     }catch(err){

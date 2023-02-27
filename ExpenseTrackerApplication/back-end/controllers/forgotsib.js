@@ -40,7 +40,7 @@ exports.forgotpassword=async(req,res)=>{
                     to:receivers,
                     subject:"this is the test subject",
                     htmlContent:`
-                    <a href="http://localhost:5200/password/resetpassword/${id}">Reset password</a>
+                    <a href="http://100.26.11.136:5200/password/resetpassword/${id}">Reset password</a>
                     `
                 })
         

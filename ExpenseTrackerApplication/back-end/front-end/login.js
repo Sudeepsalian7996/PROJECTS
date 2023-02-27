@@ -13,7 +13,7 @@ async function loginPage(e){
                 email:email.value,
                 password:password.value
             }
-            const data=await axios.post("http://localhost:5200/user/login",login_obj)
+            const data=await axios.post("http://100.26.11.136:5200/user/login",login_obj)
             console.log(data)
             //If email or password are wrong
             if(data.data.message){

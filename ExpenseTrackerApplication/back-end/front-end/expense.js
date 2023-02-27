@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
 async function pagination(){
     try{
         const token=localStorage.getItem("token")
-        const data=await axios.get("http://localhost:5200/expense/get-expense",{headers:{"Authorization":token}})
+        const data=await axios.get("http://100.26.11.136:5200/expense/get-expense",{headers:{"Authorization":token}})
     
         const pagination=document.getElementById("pagination")
         
@@ -50,7 +50,7 @@ async function pagination(){
        if(!totalPagesize){
         localStorage.setItem("pageSize",5)
        }
-       const response=await axios.get(`http://localhost:5200/expense/pagination?page=${1}&pagesize=${5}`,{headers:{"Authorization":token}})
+       const response=await axios.get(`http://100.26.11.136:5200/expense/pagination?page=${1}&pagesize=${5}`,{headers:{"Authorization":token}})
                     let allExpense=response.data.Data
                     
                     for(let i=0;i<allExpense.length;i++){
@@ -64,7 +64,7 @@ async function pagination(){
             
                 button.onclick=async()=>{
                     allExpenses.innerHTML=""
-                    const response=await axios.get(`http://localhost:5200/expense/pagination?page=${page}&pagesize=${totalPagesize}`,{headers:{"Authorization":token}})
+                    const response=await axios.get(`http://100.26.11.136:5200/expense/pagination?page=${page}&pagesize=${totalPagesize}`,{headers:{"Authorization":token}})
                     let allExpense=response.data.Data
                     for(let i=0;i<allExpense.length;i++){
                         showOnScreen(response.data.Data[i])    
@@ -112,7 +112,7 @@ async function deleteExpense(key){
     try{
         const oneExpense=document.getElementById(key)
         allExpenses.removeChild(oneExpense)
-        await axios.delete(`http://localhost:5200/expense/delete-expense/${key}`)
+        await axios.delete(`http://100.26.11.136:5200/expense/delete-expense/${key}`)
       
     }catch(err){
         console.log("delete expeses error-->",err)
@@ -130,7 +130,7 @@ async function postExpense(e){
             description:description.value,
             category:category.value
         }
-        const data=await axios.post("http://localhost:5200/expense/add-expense",expense_obj)
+        const data=await axios.post("http://100.26.11.136:5200/expense/add-expense",expense_obj)
         showOnScreen(data.data.newExpense)
         const expensetext=document.getElementById("expensetext")  
         const success=document.createTextNode("Expense added successfully")
@@ -149,13 +149,13 @@ async function postExpense(e){
 document.getElementById("razorpay").onclick=async(e)=>{
     try{
         const token=localStorage.getItem("token")
-        const resource=await axios.get("http://localhost:5200/purchase/premium-membership",{headers:{"Authorization":token}})
+        const resource=await axios.get("http://100.26.11.136:5200/purchase/premium-membership",{headers:{"Authorization":token}})
         
         let option={
         "key":resource.data.key_id,
         "order_id":resource.data.order.id,
         "handler":async function (res){
-            const data=await axios.post("http://localhost:5200/purchase/updatePremium",{
+            const data=await axios.post("http://100.26.11.136:5200/purchase/updatePremium",{
                 "order_id":option.order_id,
                 "payment_id":res.razorpay_payment_id
             },{headers:{"Authorization":token} })
@@ -172,7 +172,7 @@ e.preventDefault()
     try{
         const key=resource.data.order.id
     
-        const response=await axios.post("http://localhost:5200/purchase/updatePremium",{
+        const response=await axios.post("http://100.26.11.136:5200/purchase/updatePremium",{
             "order_id":key,
             "payment_id":null
         },{headers:{"Authorization":token} })
@@ -204,7 +204,7 @@ async function showLeaderBoard(){
 
             document.getElementById("leaderboard").innerHTML=""
             const token=localStorage.getItem("token")
-           const response= await axios.get("http://localhost:5200/premium/leaderBoard",{headers:{"Authorization":token}})
+           const response= await axios.get("http://100.26.11.136:5200/premium/leaderBoard",{headers:{"Authorization":token}})
             let parent=document.getElementById("leaderboard")
          
             response.data.forEach(ele => {
@@ -234,7 +234,7 @@ function downloadReport(){
         document.getElementById("buttons").appendChild(buttonDownload)
         buttonDownload.addEventListener("click",async(e)=>{
             e.preventDefault()
-            const response= await axios.get("http://localhost:5200/expense/download",{headers:{"Authorization":token}})
+            const response= await axios.get("http://100.26.11.136:5200/expense/download",{headers:{"Authorization":token}})
            
             const a=document.createElement("a")
             a.href=response.data.url
