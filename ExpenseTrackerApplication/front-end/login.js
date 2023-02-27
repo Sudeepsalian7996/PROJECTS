@@ -41,4 +41,3 @@ async function loginPage(e){
         console.log("error in login page FE")
     }
 }
-// git

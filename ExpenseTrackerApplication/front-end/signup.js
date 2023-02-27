@@ -39,4 +39,3 @@ async function submitSignup(e){
     password.value=""
 }
 
-// git

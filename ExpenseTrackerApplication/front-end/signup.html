@@ -6,34 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./public/signup.css">
-    <title>Login</title>
+    <title>Expense Tracker</title>
 </head>
 <body>
-    <div class="container card w-100 card shadow-lg my-5">
-
+    
+     <div class="container card w-100 card shadow-lg my-5">
+    
     <header>
         <img src="./images/expenseTrackerlogin.png" alt="image not visible">
     </header>
     <main>
-        
-        <form action="#">
+        <form > 
+            <input type="text" id="name" class="name"  placeholder="Enter UserName"><br><br>
+           
             <input type="email" id="email" class="email" placeholder="Enter Email"><br><br>
            
-            <input type="password" id="password" class="password" placeholder="Enter Password" pattern=".{8,}">
-            <div class="forgotpassword"><a href="./forgot.html">forgot password?</a></div><br>
-            <div id="loginError"></div>
-        <div id="loginSuccess"></div>
-            <button id="login">Login</button><br><br>    
+            <input type="password" id="password" class="password" placeholder="Enter Password"><br><br>
+            <div id="error"></div>
+            <button id="signup">SIGN UP</button>
         </form>
-        <label for="#">need an account?</label>
-        <a href="./signup.html">Signup Page</a>  <br><br><br><br> 
+        <label for="#">Already a user?</label>
+     <div class="login"><a href="./login.html">Login Page</a></div>   
     </main>
     <footer>
-
+        <br><br>
     </footer>
-    <div>
+</div>
+ 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="login.js"></script>
+    <script src="signup.js"></script>
 </body>
 </html>
-<!-- git -->
