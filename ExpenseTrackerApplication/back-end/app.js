@@ -43,6 +43,10 @@ app.use("/premium",premium)
 
 app.use("/password",password)
 
+app.use((req,res)=>{
+    res.sendFile(path.join(__dirname,`views/${req.url}`))
+})
+
 //create relations
 User.hasMany(Expense)
 Expense.belongsTo(User)
